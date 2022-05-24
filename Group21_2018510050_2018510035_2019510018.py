@@ -1,7 +1,4 @@
-from ast import operator
-from logging.config import IDENTIFIER
 
-from regex import E
 
 # Lexical Analyser for Ceng#
 # Programming Languages Project 1
@@ -25,7 +22,7 @@ IDENTIFIER_MAX_LENGTH = 25
 
 # Lexical analysis code file : code_file.ceng
 # Lexical analysis output file : code.lex
-rFile = open("code_file.ceng", "r")
+rFile = open("code_file2.ceng", "r")
 wFile = open("code.lex", "w")
 
 # Finds descriptive identifier other than tokens.
@@ -46,8 +43,8 @@ def id_matcher(id):
                 exit(1)
             for char in id:
                 if char not in DIGITS:
-                    print("Error: Integer defination error!!!")
-                    wFile.write("Error: Integer defination error!!!"+"\n")
+                    print("Error: Identifier defination error!!!")
+                    wFile.write("Error: Identifier defination error!!!"+"\n")
                     exit(1)
             print("Integer Constant: " + id)
             wFile.write("Integer Constant: " + id+"\n")
@@ -85,8 +82,8 @@ def lex(line):
                     # Unclosed comment situation...
                     if not "*/" in temp[1]:
                         tempStr = ""
-                        print("Error : Unclosed comment")
-                        wFile.write("Error : Unclosed comment"+"\n")
+                        print("Error: Unclosed comment")
+                        wFile.write("Error: Unclosed comment"+"\n")
                         exit(1)
                     else:
                         temp2 = temp[1].split("*/", 1)
@@ -95,11 +92,18 @@ def lex(line):
                         tempStr = ""
                         return lex(temp2[1])
                 # End of Comment Condition...
-                else:
+                elif opr in OPERATORS:
                     id_matcher(tempStr)
                     print("Operator: "+opr)
                     wFile.write("Operator: "+opr+"\n")
                     temp = line.split(opr, 1)
+                    tempStr = ""
+                    return lex(temp[1])
+                else:
+                    id_matcher(tempStr)
+                    print("Operator: "+char)
+                    wFile.write("Operator: "+char+"\n")
+                    temp = line.split(char, 1)
                     tempStr = ""
                     return lex(temp[1])
             else:
@@ -141,8 +145,8 @@ def lex(line):
             # Unclosed double quotes situation...
             if not '"' in temp[1]:
                 tempStr = ""
-                print("Unclosed double quotes !!!!!")
-                wFile.write("Unclosed double quotes !!!!!"+"\n")
+                print("Error: Unclosed double quotes !!!!!")
+                wFile.write("Error: Unclosed double quotes !!!!!"+"\n")
                 exit(1)
             else:
                 temp2 = temp[1].split('"', 1)
